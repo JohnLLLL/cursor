@@ -77,4 +77,6 @@ void clear_screen(void);
 void clear_entire_line(void);
 void clear_line_before(void);
 
+void cursor_get_position(int *col, int *row);
+
 #endif

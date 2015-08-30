@@ -23,11 +23,11 @@ static size_t pbl_; /* preoccupied buffer length - const */
 
 /**** local functions declaration ****/
 static void apply_color_attr(void);
-static void do_changes(int n);
+static int do_changes(int n);
 
 /**** local functions definitions ****/
-void do_changes(int n) {
-  write(cursor_.fd, buffer_, n);
+int do_changes(int n) {
+  return write(cursor_.fd, buffer_, n);
 #if 0
   int i;
   LogPrint("(%08x) ", n);
@@ -220,3 +220,40 @@ void clear_line_before(void)
   sprintf(buffer_ + pbl_, "1K");
   do_changes(pbl_ + 2);
 }
+
+void cursor_get_position(int *col, int *row)
+{
+  int col_, row_;
+  char ch;
+
+  sprintf(buffer_ + pbl_, "6n");
+  if (0 > do_changes(pbl_ + 2)) return;
+
+  read(cursor_.fd, &ch, 1);
+  if (ch != '\x1b') return;
+
+  read(cursor_.fd, &ch, 1);
+  if (ch != '[') return;
+
+  row_ = 0;
+  read(cursor_.fd, &ch, 1);
+  while (ch >= '0' && ch <= '9') {
+    row_ = row_ * 10 + ch - '0';
+    read(cursor_.fd, &ch, 1);
+  }
+
+  if (ch != ';') return;
+
+  col_ = 0;
+  read(cursor_.fd, &ch, 1);
+  while (ch >= '0' && ch <= '9') {
+    col_ = col_ * 10 + ch - '0';
+    read(cursor_.fd, &ch, 1);
+  }
+
+  if (ch != 'R') return;
+
+  if (row) *row = row_;
+  if (col) *col = col_;
+}
+
