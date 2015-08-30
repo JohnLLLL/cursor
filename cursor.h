@@ -67,4 +67,14 @@ void add_font_attributes(int attr);
 void remove_font_attributes(int attr);
 void reset_font_attributes(void);
 
+void cursor_save_position(void);
+void cursor_restore_position(void);
+
+void cursor_to_line_start(void);
+
+void clear_screen(void);
+
+void clear_entire_line(void);
+void clear_line_before(void);
+
 #endif
