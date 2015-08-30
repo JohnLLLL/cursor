@@ -27,7 +27,7 @@ static void do_changes(int n);
 
 /**** local functions definitions ****/
 void do_changes(int n) {
-  write(STDOUT_FILENO, buffer_, n);
+  write(cursor_.fd, buffer_, n);
 #if 0
   int i;
   LogPrint("(%08x) ", n);
@@ -83,18 +83,20 @@ static void apply_color_attr(void)
 }
 
 /**** functions definitions ****/
-int cursor_init(void)
+int cursor_init(int fd)
 {
   memset(&cursor_, 0, sizeof(cursor_));
-  if (!isatty(STDOUT_FILENO)) {
+
+  cursor_.fd = fd;
+
+  if (!isatty(cursor_.fd)) {
     return -errno;
   }
 
-  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &output_terminal_winsize_)) {
+  if (ioctl(cursor_.fd, TIOCGWINSZ, &output_terminal_winsize_)) {
     return -errno;
   }
 
-  cursor_.fd = 0;
   cursor_.col_max = output_terminal_winsize_.ws_col;
   cursor_.row_max = output_terminal_winsize_.ws_row;
 

@@ -57,7 +57,7 @@ struct Cursor_t {
 };
 
 /**** functions ****/
-int cursor_init(void);
+int cursor_init(int fd);
 void cursor_set_position(int col, int row);
 void cursor_move_by(int col, int row);
 void set_bg_color(enum color_enum_t color);
