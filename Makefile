@@ -1,2 +1,3 @@
 all:
-	gcc -fPIC -shared -o cursor.so cursor.c
+	gcc -c -o cursor.o cursor.c
+	ar rcs libcursor.a cursor.o
