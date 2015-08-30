@@ -52,16 +52,19 @@ struct Cursor_t {
   int fg_color;     ///< foreground color
   int bg_color;     ///< background color
   int font_attr;    ///< attributes: blink, bold, faint, etc. = bitwise OR
-  int col_pos;      ///< current x-position
-  int row_pos;      ///< current y-position
+  int col_pos;      ///< current x-position, XXX not tracked
+  int row_pos;      ///< current y-position, XXX not tracked
 };
 
 /**** functions ****/
-void gotoxy(int col, int row);
-void set_bg_color(color_enum_t color);
-void set_fg_color(color_enum_t color);
+int cursor_init(void);
+void cursor_set_position(int col, int row);
+void cursor_move_by(int col, int row);
+void set_bg_color(enum color_enum_t color);
+void set_fg_color(enum color_enum_t color);
 void set_font_attributes(int attr);
 void add_font_attributes(int attr);
 void remove_font_attributes(int attr);
+void reset_font_attributes(void);
 
 #endif
